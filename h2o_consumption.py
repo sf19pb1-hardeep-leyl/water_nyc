@@ -1,6 +1,5 @@
 """
-Read csv file from URL and display bar chart.
-Created: 2019-09-15
+Read water consumption rates from URL and display bar chart.
 """
 
 import matplotlib.pyplot as plt
@@ -8,7 +7,7 @@ import pandas as pd
 import requests
 import sys
 
-url = "https://raw.githubusercontent.com/SF19PB1-hardeep-leyl/water_nyc/water_consumption_in_nyc.csv.csv"
+url = "https://data.cityofnewyork.us/Environment/Water-Consumption-In-The-New-York-City/ia2d-e54m/data"
 
 try:
     response = requests.get(url)
