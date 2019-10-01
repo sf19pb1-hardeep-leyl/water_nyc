@@ -4,15 +4,9 @@ Read water consumption rates from URL and display bar chart.
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import requests
 import sys
 
 url = "https://data.cityofnewyork.us/Environment/Water-Consumption-In-The-New-York-City/ia2d-e54m/data"
-
-try:
-    response = requests.get(url)
-except requests.exceptions.RequestException as error:
-    print(error, file = sys.stderr)
 
 df = pd.read_csv(url, index_col=0)
 
