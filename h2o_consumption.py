@@ -1,34 +1,44 @@
 """
-Read water consumption rates from URL and display bar chart.
-"""
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
-url = "https://data.cityofnewyork.us/Environment/Water-Consumption-In-The-New-York-City/ia2d-e54m/data"
+url = "https://data.cityofnewyork.us/api/views/ia2d-e54m/rows.csv"
 
-df = pd.read_csv(url, index_col=0)
+try:
+    df = pd.read_csv(url, index_col = 0)
+except BaseException as error:
+    print(error, file = sys.stderr)
+    sys.exit(1)
 
-fig = plt.figure() 
+figure, ax0 = plt.subplots(figsize = (10, 6))
+ax1 = ax0.twinx()
+ax2 = ax0.twinx()
+figure.canvas.set_window_title("Water Consumption")
+plt.title("NYC Water Consumption Rates")
 
-plt.title('NYC Water Consumption Rates')
+fields = [
+    [2, ax0, "crimson", "Population",        "New York City Population"],
+    [1, ax1, "navy",    "Water Consumption", "NYC Consumption(Million gallons per day)"],
+    [0, ax2, "green",   "Per Capita",        "Per Capita(Gallons per person per day)"]
+]
 
-ax = fig.add_subplot(111) 
-ax2 = ax.twinx() 
+for field in fields:
+    ax = field[1]
+    color = field[2]
+    series = df[field[4]]   #series is a pandas Series object.  See Series.
 
-width = 0.3
+    series.plot(
+        kind = "bar",
+        color = color,
+        ax = ax,
+        width = .25,
+        position = field[0] -.5
+    )
 
-df.population.plot(kind='bar', color='crimson', ax=ax, width=width, position=2)
-df.consumption.plot(kind='bar', color='navy', ax=ax2, width=width, position=1)
-df.percapita.plot(kind='bar', color='green', ax=ax3, width=width, position=0)
+    ax.set_ylabel(field[3], color = color)
+    ax.tick_params(axis = "y", labelcolor = color)
 
-ax.set_ylabel('Population')
-ax2.set_ylabel('Water Consumption')
-ax3.set_ylabel('Per Capita')
-
-plt.ticklabel_format(style='plain', axis='y')
-
+plt.ticklabel_format(style = "plain", axis = "y")
 plt.show()
-
-sys.exit(0)
